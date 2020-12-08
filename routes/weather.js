@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 
   try {
     const { data } = await axios.get(
-      `${config.get("p")}lat=${coord.lat}&lon=${
+      `${config.get("URL")}lat=${coord.lat}&lon=${
         coord.lon
       }&units=imperial&appid=${config.get("API_KEY")}`
     );
