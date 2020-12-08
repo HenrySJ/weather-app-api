@@ -10,6 +10,6 @@
 
 **_Else_**
 
-- The db will request the weather data from [openweathermap.org][https://openweathermap.org]
+- The db will request the weather data from [openweathermap.org](https://openweathermap.org)
 - Cache the data for future use
 - Send the weather data to the client in the body of the response
