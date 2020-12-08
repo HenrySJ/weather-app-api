@@ -1,4 +1,3 @@
-const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const DailyWeatherSchema = new mongoose.Schema({
@@ -13,3 +12,7 @@ const DailyWeatherSchema = new mongoose.Schema({
     sunset: Number,
   },
 });
+
+const DailyWeather = mongoose.model("daily-weather", DailyWeatherSchema);
+
+module.exports.DailyWeather = DailyWeather;

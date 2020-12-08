@@ -16,4 +16,4 @@ const CurrentWeatherSchema = new mongoose.Schema({
 
 const CurrentWeather = mongoose.model("Current-Weather", CurrentWeatherSchema);
 
-exports.CurrentWeather = CurrentWeather;
+module.exports.CurrentWeather = CurrentWeather;
