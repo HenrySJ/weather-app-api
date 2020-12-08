@@ -1,7 +1,5 @@
 # Welcome to the weather-app-api
 
-# Built w/ Node.js, Express, and Mongodb backend!
-
 ## Purpose
 
 - Recieve weather data requests from the [weather-app](https://github.com/HenrySJ/weather-app) client via the http protocol.
