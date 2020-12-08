@@ -16,3 +16,4 @@ const DailyWeatherSchema = new mongoose.Schema({
 const DailyWeather = mongoose.model("daily-weather", DailyWeatherSchema);
 
 module.exports.DailyWeather = DailyWeather;
+module.exports.DailyWeatherSchema = DailyWeatherSchema;
