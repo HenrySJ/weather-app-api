@@ -1,4 +1,6 @@
-# Welcome to the weather-app-api Node.js, Express, and Mongodb backend!
+# Welcome to the weather-app-api
+
+# Built w/ Node.js, Express, and Mongodb backend!
 
 ## Purpose
 
