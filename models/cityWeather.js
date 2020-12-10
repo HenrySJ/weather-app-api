@@ -4,6 +4,10 @@ const { DailyWeatherSchema } = require("./dailyWeather");
 const { HourlyWeatherSchema } = require("./hourlyWeather");
 
 const CityWeatherSchema = new mongoose.Schema({
+  coordinates: {
+    lat: Number,
+    lon: Number,
+  },
   current: CurrentWeatherSchema,
   daily: DailyWeatherSchema,
   hourly: HourlyWeatherSchema,
