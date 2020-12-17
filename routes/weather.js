@@ -6,15 +6,15 @@ const { CityWeather } = require("../models/cityWeather");
 const Joi = require("joi");
 const { CurrentWeather } = require("../models/currentWeather");
 const { DailyWeather } = require("../models/dailyWeather");
-const { date } = require("joi");
 const { HourlyWeather } = require("../models/hourlyWeather");
+const { getSaved } = require("../middlewears/getSaved");
 
 const schema = Joi.object({
   lat: Joi.number().required(),
   lon: Joi.number().required(),
 });
 
-router.get("/", async (req, res) => {
+router.get("/", getSaved, async (req, res) => {
   const { error } = schema.validate({
     lat: req.query.lat,
     lon: req.query.lon,
