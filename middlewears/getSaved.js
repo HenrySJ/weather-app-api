@@ -1,13 +1,14 @@
 const { CityWeather } = require("../models/cityWeather");
 
-const getSaved = (req, res, next) => {
-  const weather = CityWeather.findOne({
-    coordinates: { lat: req.query.lat, lon: req.query.lon },
+const getSaved = async (req, res, next) => {
+  const weather = await CityWeather.findOne({
+    "coordinates.lat": `${req.query.lat}`,
+    "coordinates.lon": `${req.query.lon}`,
   });
 
-  if (!weather) next();
+  if (!weather) return next();
 
-  res.send("we got it");
+  res.send(weather);
 };
 
 module.exports.getSaved = getSaved;
