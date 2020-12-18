@@ -33,7 +33,7 @@ router.get("/", getSaved, async (req, res) => {
     );
 
     const geo = await axios.get(
-      `https://geocode.xyz/${data.lat},${data.lon}?json=1`
+      `https://geocode.xyz/${data.lat},${data.lon}?region=US&json=1`
     );
 
     const newCurrentWeather = new CurrentWeather({
@@ -86,7 +86,7 @@ router.get("/", getSaved, async (req, res) => {
       current: newCurrentWeather,
       daily: newDailyWeather,
       hourly: newHourlyWeahter,
-      location: geo.data.city,
+      location: `${geo.data.city}, ${geo.data.state}`,
       alerts: data.alerts,
     });
     const weather = await newCityWeather.save();
