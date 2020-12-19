@@ -7,7 +7,7 @@ const Joi = require("joi");
 const { CurrentWeather } = require("../models/currentWeather");
 const { DailyWeather } = require("../models/dailyWeather");
 const { HourlyWeather } = require("../models/hourlyWeather");
-const { getSaved } = require("../middlewears/getSaved");
+const { getSaved } = require("../middlewear/getSaved");
 
 const schema = Joi.object({
   lat: Joi.number().required(),
