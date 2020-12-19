@@ -20,10 +20,7 @@ router.get("/", getSaved, async (req, res) => {
     lon: req.query.lon,
   });
 
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
+  if (error) return res.status(400).send(error.details[0].message);
 
   try {
     const { data } = await axios.get(
