@@ -8,7 +8,15 @@ const getSaved = async (req, res, next) => {
 
   if (!weather) return next();
 
-  res.send(weather);
+  if (compareTimestamp(weather._id.getTimestamp())) return res.send(weather);
+
+  await CityWeather.deleteOne({ _id: weather._id });
+  next();
 };
+
+function compareTimestamp(timestamp) {
+  const isodate = new Date(new Date().toISOString());
+  if (isodate.getTime() - timestamp.getTime() < 3000) return true;
+}
 
 module.exports.getSaved = getSaved;
