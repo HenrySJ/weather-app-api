@@ -3,3 +3,6 @@ node_modules/
 
 # Enviornment Variables
 *.json
+
+# Logs
+*.log
