@@ -2,7 +2,7 @@
 node_modules/
 
 # Enviornment Variables
-*.json
+config/
 
 # Logs
 *.log
