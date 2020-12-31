@@ -28,9 +28,7 @@ router.get("/", async (req, res) => {
 
   try {
     const { data } = await axios.get(
-      `${config.get("URL")}lat=${req.query.lat}&lon=${
-        req.query.lon
-      }&units=imperial&appid=${config.get("API_KEY")}`
+      `${process.env.URL}lat=${req.query.lat}&lon=${req.query.lon}&units=imperial&appid=${process.env.API_KEY}`
     );
 
     const geo = await axios.get(
