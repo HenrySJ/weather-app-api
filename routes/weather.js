@@ -94,7 +94,7 @@ router.get("/", async (req, res) => {
     res.send(weather);
   } catch (error) {
     logger.error(error);
-    res.send(error.message);
+    res.status(500).send(error.message);
   }
 });
 

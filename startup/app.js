@@ -22,15 +22,6 @@ module.exports = () => {
   // Routes
   app.use("/api/weather", weather);
 
-  // Error Logging
-
-  app.use(function (err, req, res, next) {
-    logger.error(
-      `${req.method} - ${err.message} - ${req.originalUrl} - ${req.ip}`
-    );
-    next(err);
-  });
-
   // Server
   const port = process.env.PORT || 3000;
 
