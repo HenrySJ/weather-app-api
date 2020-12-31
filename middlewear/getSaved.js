@@ -1,17 +1,17 @@
 const { CityWeather } = require("../models/cityWeather");
 
-const getSaved = async (req, res, next) => {
+const getSaved = async (req) => {
   const weather = await CityWeather.findOne({
     "coordinates.lat": `${req.query.lat}`,
     "coordinates.lon": `${req.query.lon}`,
   });
 
-  if (!weather) return next();
+  if (!weather) return "";
 
-  if (compareTimestamp(weather._id.getTimestamp())) return res.send(weather);
+  if (compareTimestamp(weather._id.getTimestamp())) return weather;
 
   await CityWeather.deleteOne({ _id: weather._id });
-  next();
+  return "";
 };
 
 function compareTimestamp(timestamp) {
