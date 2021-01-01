@@ -3,14 +3,14 @@ const mongoose = require("mongoose");
 const CurrentWeatherSchema = new mongoose.Schema({
   icon: String,
   temp: Number,
-  date: Date,
+  date: Number,
   data: {
     forcast: String,
     wind: { windDegree: Number, windSpeed: Number },
     humidity: Number,
     visibility: Number,
-    sunrise: Date,
-    sunset: Date,
+    sunrise: Number,
+    sunset: Number,
   },
 });
 
