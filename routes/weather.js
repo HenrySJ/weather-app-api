@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
       temp: data.current.temp,
       date: data.current.dt,
       data: {
-        forcast: data.current.weather[0].forcast,
+        forcast: data.current.weather[0].description,
         wind: {
           windDegree: data.current.wind_deg,
           windSpeed: data.current.wind_speed,
