@@ -1,5 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
+const cors = require("cors");
 const logger = require("./logger");
 const morgan = require("morgan");
 const weather = require("../routes/weather");
@@ -17,6 +18,7 @@ module.exports = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());
+  app.use(cors());
   app.use(morgan("combined", { stream: accessLogStream }));
 
   // Routes
