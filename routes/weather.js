@@ -1,39 +1,38 @@
-const express = require("express");
-const router = express.Router();
-const axios = require("axios");
-const config = require("config");
-const Joi = require("joi");
-const { CityWeather } = require("../models/cityWeather");
-const { CurrentWeather } = require("../models/currentWeather");
-const { DailyWeather } = require("../models/dailyWeather");
-const { HourlyWeather } = require("../models/hourlyWeather");
-const { getSaved } = require("../middlewear/getSaved");
-const logger = require("../startup/logger");
+const express = require('express')
+const router = express.Router()
+const axios = require('axios')
+const Joi = require('joi')
+const { CityWeather } = require('../models/cityWeather')
+const { CurrentWeather } = require('../models/currentWeather')
+const { DailyWeather } = require('../models/dailyWeather')
+const { HourlyWeather } = require('../models/hourlyWeather')
+const { getSaved } = require('../middlewear/getSaved')
+const logger = require('../startup/logger')
 
 const schema = Joi.object({
   lat: Joi.number().required(),
   lon: Joi.number().required(),
-});
+})
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   const { error } = schema.validate({
     lat: req.query.lat,
     lon: req.query.lon,
-  });
+  })
 
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(error.details[0].message)
 
-  const result = await getSaved(req);
-  if (result) return res.send(result);
+  const result = await getSaved(req)
+  if (result) return res.send(result)
 
   try {
     const { data } = await axios.get(
       `${process.env.URL}lat=${req.query.lat}&lon=${req.query.lon}&units=imperial&appid=${process.env.API_KEY}`
-    );
+    )
 
     const geo = await axios.get(
       `https://geocode.xyz/${data.lat},${data.lon}?region=US&json=1`
-    );
+    )
 
     const newCurrentWeather = new CurrentWeather({
       icon: data.current.weather[0].icon,
@@ -50,7 +49,7 @@ router.get("/", async (req, res) => {
         sunrise: data.current.sunrise,
         sunset: data.current.sunset,
       },
-    });
+    })
 
     const dailyArray = data.daily.map((current) => {
       return {
@@ -67,15 +66,15 @@ router.get("/", async (req, res) => {
           sunrise: current.sunrise,
           sunset: current.sunset,
         },
-      };
-    });
+      }
+    })
     const newDailyWeather = new DailyWeather({
       data: dailyArray,
-    });
+    })
 
     const newHourlyWeahter = new HourlyWeather({
       data: data.hourly,
-    });
+    })
 
     const newCityWeather = new CityWeather({
       coordinates: {
@@ -87,13 +86,13 @@ router.get("/", async (req, res) => {
       hourly: newHourlyWeahter,
       location: `${geo.data.city}, ${geo.data.state}`,
       alerts: data.alerts,
-    });
-    const weather = await newCityWeather.save();
-    res.send(weather);
+    })
+    const weather = await newCityWeather.save()
+    res.send(weather)
   } catch (error) {
-    logger.error(error);
-    res.status(500).send(error.message);
+    logger.error(error)
+    res.status(500).send(error.message)
   }
-});
+})
 
-module.exports = router;
+module.exports = router
