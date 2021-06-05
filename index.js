@@ -1,3 +1,4 @@
 // Startup
-require("./startup/db")();
-require("./startup/app")();
+require('dotenv').config()
+require('./startup/db')()
+require('./startup/app')()
