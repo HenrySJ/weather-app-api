@@ -62,18 +62,16 @@ router.get('/', async (req, res) => {
       }
     })
 
-    const hourlyWeahter = {
+    const hourlyWeather = {
       data: data.hourly,
     }
 
     const newCityWeather = new CityWeather({
-      coordinates: {
-        lat: data.lat,
-        lon: data.lon,
-      },
+      lat: data.lat,
+      lon: data.lon,
       current: currentWeather,
       daily: dailyWeather,
-      hourly: hourlyWeahter,
+      hourly: hourlyWeather,
       location: `${geo.data.city}, ${geo.data.state}`,
       alerts: data.alerts,
     })

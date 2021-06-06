@@ -1,10 +1,8 @@
 const mongoose = require('mongoose')
 
 const CityWeatherSchema = new mongoose.Schema({
-  coordinates: {
-    lat: Number,
-    lon: Number,
-  },
+  lat: Number,
+  lon: Number,
   current: Object,
   daily: Array,
   hourly: Array,
