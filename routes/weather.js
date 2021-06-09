@@ -1,99 +1,86 @@
-const express = require("express");
-const router = express.Router();
-const axios = require("axios");
-const config = require("config");
-const Joi = require("joi");
-const { CityWeather } = require("../models/cityWeather");
-const { CurrentWeather } = require("../models/currentWeather");
-const { DailyWeather } = require("../models/dailyWeather");
-const { HourlyWeather } = require("../models/hourlyWeather");
-const { getSaved } = require("../middlewear/getSaved");
-const logger = require("../startup/logger");
+const express = require('express')
+const router = express.Router()
+const axios = require('axios')
+const Joi = require('joi')
+const { CityWeather } = require('../models/cityWeather')
+const { getSaved } = require('../middlewear/getSaved')
+const logger = require('../startup/logger')
 
 const schema = Joi.object({
   lat: Joi.number().required(),
   lon: Joi.number().required(),
-});
+})
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   const { error } = schema.validate({
     lat: req.query.lat,
     lon: req.query.lon,
-  });
+  })
 
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(error.details[0].message)
 
-  const result = await getSaved(req);
-  if (result) return res.send(result);
+  const result = await getSaved(req)
+  if (result) return res.send(result)
 
   try {
     const { data } = await axios.get(
-      `${process.env.URL}lat=${req.query.lat}&lon=${req.query.lon}&units=imperial&appid=${process.env.API_KEY}`
-    );
+      `${process.env.URL}lat=${req.query.lat}&lon=${req.query.lon}&exclude=minutely&units=imperial&appid=${process.env.API_KEY}`
+    )
 
     const geo = await axios.get(
       `https://geocode.xyz/${data.lat},${data.lon}?region=US&json=1`
-    );
+    )
 
-    const newCurrentWeather = new CurrentWeather({
+    const currentWeather = {
       icon: data.current.weather[0].icon,
       temp: data.current.temp,
       date: data.current.dt,
-      data: {
-        forcast: data.current.weather[0].description,
-        wind: {
-          windDegree: data.current.wind_deg,
-          windSpeed: data.current.wind_speed,
-        },
-        humidity: data.current.humidity,
-        visibility: data.current.visibility,
-        sunrise: data.current.sunrise,
-        sunset: data.current.sunset,
+      forcast: data.current.weather[0].description,
+      wind: {
+        windDegree: data.current.wind_deg,
+        windSpeed: data.current.wind_speed,
       },
-    });
+      humidity: data.current.humidity,
+      clouds: data.current.clouds,
+    }
 
-    const dailyArray = data.daily.map((current) => {
+    const dailyWeather = data.daily.map((current) => {
       return {
         icon: current.weather[0].icon,
-        temp: current.temp.max,
         date: current.dt,
-        data: {
-          forecast: current.weather[0].description,
-          wind: {
-            windDegree: current.wind_deg,
-            windSpeed: current.wind_speed,
-          },
-          humidity: current.humidity,
-          sunrise: current.sunrise,
-          sunset: current.sunset,
+        temp: {
+          max: current.temp.max,
+          min: current.temp.min,
         },
-      };
-    });
-    const newDailyWeather = new DailyWeather({
-      data: dailyArray,
-    });
+        forecast: current.weather[0].description,
+        wind: {
+          windDegree: current.wind_deg,
+          windSpeed: current.wind_speed,
+        },
+        humidity: current.humidity,
+        clouds: current.clouds,
+      }
+    })
 
-    const newHourlyWeahter = new HourlyWeather({
+    const hourlyWeather = {
       data: data.hourly,
-    });
+    }
 
     const newCityWeather = new CityWeather({
-      coordinates: {
-        lat: data.lat,
-        lon: data.lon,
-      },
-      current: newCurrentWeather,
-      daily: newDailyWeather,
-      hourly: newHourlyWeahter,
+      lat: data.lat,
+      lon: data.lon,
+      current: currentWeather,
+      daily: dailyWeather,
+      hourly: hourlyWeather,
       location: `${geo.data.city}, ${geo.data.state}`,
       alerts: data.alerts,
-    });
-    const weather = await newCityWeather.save();
-    res.send(weather);
+    })
+    const weather = await newCityWeather.save()
+    res.send(weather)
   } catch (error) {
-    logger.error(error);
-    res.status(500).send(error.message);
+    logger.error(error)
+    res.status(500).send(error.message)
   }
-});
+})
 
-module.exports = router;
+module.exports = router
