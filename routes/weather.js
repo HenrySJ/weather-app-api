@@ -1,27 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const axios = require('axios')
-const Joi = require('joi')
 const { CityWeather } = require('../models/cityWeather')
+const { error } = require('../middlewear/error')
 const { getSaved } = require('../middlewear/getSaved')
 const logger = require('../startup/logger')
 
-const schema = Joi.object({
-  lat: Joi.number().required(),
-  lon: Joi.number().required(),
-})
-
-router.get('/', async (req, res) => {
-  const { error } = schema.validate({
-    lat: req.query.lat,
-    lon: req.query.lon,
-  })
-
-  if (error) return res.status(400).send(error.details[0].message)
-
-  const result = await getSaved(req)
-  if (result) return res.send(result)
-
+router.get('/', [error, getSaved], async (req, res) => {
   try {
     const { data } = await axios.get(
       `${process.env.URL}lat=${req.query.lat}&lon=${req.query.lon}&exclude=minutely&units=imperial&appid=${process.env.API_KEY}`
